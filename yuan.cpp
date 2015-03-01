@@ -75,18 +75,29 @@ void open_output( string outputfilename, ofstream &outputfile){
 }
 
 
-void date_check(string date){
+void date_check(string date, stringstream & slog){
+    string sout;
+    ofstream outputfile, logfile;
     if (date.size()!=10){
-        cout <<"Invalid date.\n";
+        sout ="Invalid date.\n";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         exit (0);
     }
     if (!isdigit(date[0])||!isdigit(date[1])||!isdigit(date[3])||!isdigit(date[4])
         ||!isdigit(date[6])||!isdigit(date[7])||!isdigit(date[8])||!isdigit(date[9])){
-        cout <<"Invalid date. (The date should be numbers.)\n";
+        sout ="Invalid date. (The date should be numbers.)\n";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         exit(0);
     }   
     if((date[2] != '-' || date[5] != '-')&&(date[2] != '/' || date[5] != '/')){
-        cout<<"Invalid fomat of date.\n";
+        sout ="Invalid fomat of date.\n";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         exit(0);
     }
 
@@ -120,33 +131,52 @@ string print_out_month(string date){
         cout << "December ";
 }
 
-void time_check(string time){
+void time_check(string time, stringstream & slog){
+    string sout;
+    ofstream outputfile, logfile;
     if (time.size()!=12){
-        cout <<"Invalid format of time.\n";
+        sout = "Invalid format of time.\n";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         exit (0);
     }
     if (!isdigit(time[0])||!isdigit(time[1])
         ||!isdigit(time[3])||!isdigit(time[4])
         ||!isdigit(time[6])||!isdigit(time[7])
         ||!isdigit(time[9])||!isdigit(time[10])||!isdigit(time[11])){
-        cout <<"Invalid time. (The time should be numbers.)\n";
+        sout = "Invalid time. (The time should be numbers.)\n";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         exit(0);
     }   
     if(time[2] != ':' || time[5] != ':'||time[8] != '.' ){
-        cout<<"Invalid fomat of time.\n";
+        sout = "Invalid fomat of time.\n";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         exit(0);
     }
 
     return;
 }
 
-void timezone_check(string timezone){
+void timezone_check(string timezone, stringstream &slog){
+    string sout;
+    ofstream outputfile, logfile;
     if (timezone.size()!=3){
-        cout <<"Invalid format of timezone.\n";
+        sout = "Invalid format of timezone.\n";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         exit (0);
     }
     if (!isalpha(timezone[0])||!isalpha(timezone[1])||!isalpha(timezone[2])){
-        cout <<"Invalid format of timezone. \n";
+        sout = "Invalid format of timezone. \n";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         exit(0);
     }
     return;
@@ -183,7 +213,6 @@ int main(){
     open_log("yuan.log",logfile);
     logfile.close();
     sout = "> Enter input file name: ";
-    //slog << sout;
     F=2;
     print_output(outputfile, logfile,slog.str(), sout, F);
     cin >> inputfilename;
@@ -201,14 +230,16 @@ int main(){
     slog << sout;
     F=2;
     print_output(outputfile, logfile, slog.str(),sout, F);
+    logfile.close();
+
     open_input(inputfilename,inputfile, flag);
     inputfile >> EventID;
     inputfile >> date;
-    date_check(date);  
+    date_check(date,slog);  
     inputfile >> time;
-    time_check(time);
+    time_check(time,slog);
     inputfile >> timezone;
-    timezone_check(timezone);
+    timezone_check(timezone,slog);
 
     string name;
     for ( int i=0; getline(inputfile,name); i++ ){   
