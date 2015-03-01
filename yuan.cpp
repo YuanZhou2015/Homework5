@@ -7,16 +7,15 @@
 
 using namespace std;
 
-void print_output(ofstream &outputfile, ofstream &logfile,string str,int &F){    
+void print_output(ofstream &outputfile, ofstream &logfile,string str,string termina, int &F){    
     if (F==1){
         outputfile.open("yuan.out");
-        cout << str;
         outputfile << str;
         outputfile.close();
     }
     if (F==2){
         logfile.open("yuan.log");
-        cout << str;
+        cout << termina;
         logfile << str;
         logfile.close();
     }        
@@ -40,7 +39,7 @@ void open_input(string inputfilename,ifstream &inputfile,int &flag){
 
     ofstream outputfile, logfile;
     stringstream ss;
-    string information;
+    string information,termina;
 
     inputfile.open(inputfilename.c_str());
     if (!inputfile.is_open()){
@@ -49,7 +48,7 @@ void open_input(string inputfilename,ifstream &inputfile,int &flag){
            << endl;
         information = ss.str();
         int F = 1;
-        print_output(outputfile,logfile,information,F);
+        print_output(outputfile,logfile,information,termina,F);
         flag = 1;
         return;
     } 
@@ -59,7 +58,7 @@ void open_input(string inputfilename,ifstream &inputfile,int &flag){
 void open_output( string outputfilename, ofstream &outputfile){
     ofstream logfile;
     stringstream ss;
-    string information;
+    string information,termina;
 
     outputfile.open(outputfilename.c_str());
     logfile.open("yuan.log");
@@ -69,7 +68,7 @@ void open_output( string outputfilename, ofstream &outputfile){
              << endl;
         information = ss.str();
         int F=2;
-        print_output(outputfile,logfile,information,F);
+        print_output(outputfile,logfile,information,termina,F);
         int flag = 1;
         return;
     }
@@ -176,73 +175,92 @@ int main(){
     ifstream inputfile;
     ofstream logfile, outputfile;
     string inputfilename, logfilename, outputfilename;
-    string EventID, date, time, timezone,inform;
+    string sout, EventID, date, time, timezone,information;
+    stringstream slog;
   
-    int flag=0;
+    int flag=0,F;
 
     open_log("yuan.log",logfile);
     logfile.close();
-    cout << "> Enter input file name: ";
+    sout = "> Enter input file name: ";
+    //slog << sout;
+    F=2;
+    print_output(outputfile, logfile,slog.str(), sout, F);
     cin >> inputfilename;
-    open_input(inputfilename,inputfile, flag);
     if (flag ==1)
     return 0;
+    sout = "Opening file: ";
+    slog << sout;
+    F=2;
+    print_output(outputfile, logfile, slog.str(), sout, F);
+    sout =inputfilename;
+    slog << sout;
+    F=2;
+    print_output(outputfile, logfile, slog.str(),sout, F);
+    sout = "\nProcessing input...\n";
+    slog << sout;
+    F=2;
+    print_output(outputfile, logfile, slog.str(),sout, F);
+    open_input(inputfilename,inputfile, flag);
     inputfile >> EventID;
-    cout << EventID;
     inputfile >> date;
-    date_check(date);
-    cout << date[3] << date[4]<<' ';
-    print_out_month(date);
-    cout << date[6] << date[7] << date[8] << date[9] <<' ';   
+    date_check(date);  
     inputfile >> time;
     time_check(time);
     inputfile >> timezone;
     timezone_check(timezone);
-    cout << timezone;
-    while (getline(inputfile,inform)){
-        break;
-    }
-    for ( int i=0; getline(inputfile,inform); i++ ){   
-        if (i==0)
-       // cout << inform << endl;
+
+    string name;
+    for ( int i=0; getline(inputfile,name); i++ ){   
+        if (i==1)
         break;
     }
     double longitude, latitude,depth;
     inputfile >> longitude >> latitude >> depth;
-    cout << longitude;
-    cout << latitude;
-    cout << depth;
-
     string magnitude;
     inputfile >> magnitude;
     if(!is_valid_magnitude (magnitude)){
-        string information = "invalid manitude";
-        int F=2;
-        print_output(outputfile, logfile,information, F);
+        sout = "invalid magnitude.\n";
+        slog << sout;
+        F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         flag = 1;
         return 0;
     }
-    else
-        cout << magnitude;
+ /*   else
+        cout << magnitude;*/
 
-    string magnitudevalue;
+    float magnitudevalue;
     inputfile >> magnitudevalue;
-    cout << magnitudevalue<<"\n";
+    if (magnitudevalue<0){
+        sout =  "invalid magnitudevalue.\n";
+        slog << sout;
+        F=2;
+        print_output(outputfile, logfile, slog.str(),sout,F);
+        flag = 1;
+        return 0;
+    }
+
+    // If the header read successfully, then open the output file.
 
     //if (flag == 0)
         open_output("yuan.out",outputfile);
     outputfile.close();
+    sout = "Header read correctly!\n";
+    slog << sout;
+    F=2;
+    print_output(outputfile, logfile, slog.str(),sout, F);
     stringstream ss;
     ss << "# " << date[3] << date[4]<<' ';
     ss << print_out_month(date);
     ss << date[6] << date[7] << date[8] << date[9] <<' ';
     ss << time << ' ' << timezone << ' ';
-    ss << magnitude << ' ' << magnitudevalue;
-    ss << inform << ' ';
+    ss << magnitude << ' ' << magnitudevalue << ' ';
+    ss << name << "\n";
     ss << "[" << EventID <<"] ";
     ss << "(" << longitude << ", " << latitude << ", " << depth << ")";
-    int F=1;
-    print_output(outputfile, logfile,ss.str(), F);
+    F=1;
+    print_output(outputfile, logfile,ss.str(),sout, F);
 
 
     return 0;
