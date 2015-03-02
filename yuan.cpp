@@ -604,7 +604,7 @@ int main(){
     Signal Signaldata[MAXSIZE];
     int size = 0, i=1,m=0, flag1=0,flag2=0,flag3=0,flag4=0,flag5=0;
     string networkcode, stationcode, typeofband, typeofinstru, orientation;
-    while (!inputfile.eof() && size< MAXSIZE ){              
+    while (!inputfile.eof() && size < MAXSIZE ){              
         inputfile >> networkcode;
         networkcode_check(networkcode,slog,ss,i,flag1);
         inputfile >> stationcode;
@@ -627,6 +627,8 @@ int main(){
                 //ss<< Signaldata[size].NT << "." << Signaldata[size].STN << "." << Signaldata[size].B << Signaldata[size].I << Signaldata[size].O <<"\n"; 
                 size++;
                 j++;
+                if (size == 300)
+                    break;
             }
         }
         if(flag1!=0 || flag2!=0 || flag3!=0 || flag4!=0 || flag5!=0)
