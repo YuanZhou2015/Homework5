@@ -23,7 +23,8 @@
 
 using namespace std;
 
-void print_output(ofstream &outputfile, ofstream &logfile,string str,string termina, int &F){    
+void print_output(ofstream &outputfile, ofstream &logfile,
+                  string str,string termina, int &F){    
     if (F==1){
         outputfile.open("yuan.out");
         outputfile << str;
@@ -223,7 +224,8 @@ string itos(int i) {
     return s.str();
 }
 
-void networkcode_check(string networkcode, stringstream &slog, stringstream &ss, int &i, int &flag){
+void networkcode_check(string networkcode, stringstream &slog, 
+                       stringstream &ss, int &i, int &flag){
     string sout;
     ofstream outputfile, logfile;
     int F;
@@ -260,17 +262,11 @@ void networkcode_check(string networkcode, stringstream &slog, stringstream &ss,
         print_output(outputfile, logfile, slog.str(), sout, F);
         flag=1;
     }
-
-   /* if (flag==0){
-        F=1;
-        sout = '\0';
-        ss << networkcode<<'.';
-        print_output(outputfile, logfile,ss.str(),sout,F);
-    }*/
     return;
 }
 
-void stationcode_check(string stationcode,stringstream &slog,stringstream &ss, int &i, int &flag){
+void stationcode_check(string stationcode,stringstream &slog,
+                       stringstream &ss, int &i, int &flag){
     string sout;
     ofstream outputfile, logfile;
     int F;
@@ -327,21 +323,15 @@ void stationcode_check(string stationcode,stringstream &slog,stringstream &ss, i
             flag=1;
         }
     }
-
-   /* if (flag==0){
-        F=1;
-        sout = '\0';
-        ss << stationcode<<'.';
-        print_output(outputfile, logfile,ss.str(),sout,F);
-    }*/
     return;
 }
 
 bool is_valid_typeofband (string s) {
     string ss = uppercase(s);
-    return((ss=="LONG-PERIOD")||(ss=="SHORT-PERIOD")||(ss=="VROADBAND"));
+    return((ss=="LONG-PERIOD")||(ss=="SHORT-PERIOD")||(ss=="BROADBAND"));
 }
-void typeofband_check(string &typeofband,stringstream &slog,stringstream &ss, int &i, int flag){
+void typeofband_check(string &typeofband,stringstream &slog,
+                      stringstream &ss, int &i, int flag){
     string sout;
     ofstream outputfile, logfile;
     int F;
@@ -363,24 +353,12 @@ void typeofband_check(string &typeofband,stringstream &slog,stringstream &ss, in
     }
     if (flag==0){
         if (uppercase(typeofband)=="LONG-PERIOD"){
-            /*F=1;
-            sout = '\0';
-            ss << "L";
-            print_output(outputfile, logfile,ss.str(),sout,F);   */
             typeofband = "L";
         }
         if (uppercase(typeofband)=="SHORT-PERIOD"){
-            /*F=1;
-            sout = '\0';
-            ss << "B";
-            print_output(outputfile, logfile,ss.str(),sout,F);   */
             typeofband = "B";
         }
         if (uppercase(typeofband)=="BROADBAND"){
-           /* F=1;
-            sout = '\0';
-            ss << "H";
-            print_output(outputfile, logfile,ss.str(),sout,F);   */
             typeofband = "H";
         }
     }
@@ -391,7 +369,8 @@ bool is_valid_typeofinstru (string s) {
     string ss = uppercase(s);
     return((ss=="HIGH-GAIN")||(ss=="LOW-GAIN")||(ss=="ACCELEROMETER"));
 }
-void typeofinstru_check(string &typeofinstru,stringstream &slog, stringstream &ss, int&i, int &flag){
+void typeofinstru_check(string &typeofinstru,stringstream &slog, 
+                        stringstream &ss, int&i, int &flag){
     string sout;
     ofstream outputfile, logfile;
     int F;
@@ -413,30 +392,19 @@ void typeofinstru_check(string &typeofinstru,stringstream &slog, stringstream &s
     }
     if (flag==0){
         if (uppercase(typeofinstru)=="HIGH-GAIN"){
-           /* F=1;
-            sout = '\0';
-            ss << "H";
-            print_output(outputfile, logfile,ss.str(),sout,F);*/  
             typeofinstru = "H";
         }
         if (uppercase(typeofinstru)=="LOW-GAIN"){
-           /* F=1;
-            sout = '\0';
-            ss << "L";
-            print_output(outputfile, logfile,ss.str(),sout,F);   */
             typeofinstru = "L";
         }
         if (uppercase(typeofinstru)=="ACCELEROMETER"){
-            /*F=1;
-            sout = '\0';
-            ss << "N";
-            print_output(outputfile, logfile,ss.str(),sout,F);   */
             typeofinstru = "N";
         }
     }
 }
 
-void orientation_check(string orientation,stringstream &slog,stringstream &ss, int &i, int &flag){
+void orientation_check(string orientation,stringstream &slog,
+                       stringstream &ss, int &i, int &flag){
     string sout;
     ofstream outputfile, logfile;
     int F,n,j;
@@ -608,7 +576,8 @@ int main(){
     F=1;
     print_output(outputfile, logfile,ss.str(),sout, F);
 
-    // Reading the table of earthquake information. The number of valid information will not more than 300.
+    // Reading the table of earthquake information. 
+    // The number of valid information will not more than 300.
     const int MAXSIZE = 300;
     Signal Signaldata[MAXSIZE];
     int size = 0, i=1,m=0, flag1=0,flag2=0,flag3=0,flag4=0,flag5=0;
@@ -633,7 +602,6 @@ int main(){
                 Signaldata[size].B = typeofband;
                 Signaldata[size].I = typeofinstru;
                 Signaldata[size].O = orientation[j];
-                //ss<< Signaldata[size].NT << "." << Signaldata[size].STN << "." << Signaldata[size].B << Signaldata[size].I << Signaldata[size].O <<"\n"; 
                 size++;
                 j++;
                 if (size == 300)
@@ -673,7 +641,8 @@ int main(){
     for (int j=0; j< size; j++){
         F=1;
        // sout = '\0';
-        ss << Signaldata[j].NT << "." << Signaldata[j].STN << "." << Signaldata[j].B << Signaldata[j].I << Signaldata[j].O <<"\n"; 
+        ss << Signaldata[j].NT << "." << Signaldata[j].STN << "." 
+           << Signaldata[j].B << Signaldata[j].I << Signaldata[j].O <<"\n"; 
         print_output(outputfile, logfile,ss.str(),sout,F); 
     }
     F=2;
