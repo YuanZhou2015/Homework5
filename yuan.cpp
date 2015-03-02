@@ -1,7 +1,15 @@
 ﻿/*Homework 5
+*Learning the arrays, enumerators and structures.
+*Practicing design and use functions.
 *
-
-* https://github.com/YuanZhou2015/Homework5
+*The task in this assignment is to read information about station instruments in 
+*seismic networks that recorded an earthquake, checking for and reporting errors 
+*as you read the input file, and write out a list with validsignals available for
+*the given earthquake.
+*
+*If the header read correctly, the maximum number of valid signals should be 300.
+*
+* Github https://github.com/YuanZhou2015/Homework5
 * by Yuan Zhou
 * February 25 2015
 */
@@ -11,6 +19,7 @@
 #include <ctype.h>
 #include <fstream>
 #include <sstream>
+#include <cstdlib>
 
 using namespace std;
 
