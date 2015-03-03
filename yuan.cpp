@@ -52,41 +52,44 @@ void open_log( string logfilename, ofstream &logfile){
     }
 }
 
-void open_input(string inputfilename,ifstream &inputfile,int &flag){
+void open_input(string inputfilename,ifstream &inputfile,stringstream &slog, int &flag){
 
     ofstream outputfile, logfile;
-    stringstream ss;
-    string information,termina;
+    string  sout;
 
     inputfile.open(inputfilename.c_str());
     if (!inputfile.is_open()){
-        ss << "Cannot open input file: "
-           << inputfilename
-           << endl;
-        information = ss.str();
-        int F = 1;
-        print_output(outputfile,logfile,information,termina,F);
+        sout ="\nCannot open input file: ";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
+        sout = inputfilename;
+        slog << sout;
+        F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         flag = 1;
-        return;
+        exit(0);
     } 
     return;
 }
 
-void open_output( string outputfilename, ofstream &outputfile){
+void open_output( string outputfilename, ofstream &outputfile, stringstream &slog){
     ofstream logfile;
-    stringstream ss;
-    string information,termina;
+    string sout;
 
     outputfile.open(outputfilename.c_str());
     logfile.open("yuan.log");
     if (!outputfile.is_open() ){
-        ss << "Cannot open output file: "
-             << outputfilename
-             << endl;
-        information = ss.str();
+        sout ="\nCannot open output file: ";
+        slog << sout;
         int F=2;
-        print_output(outputfile,logfile,information,termina,F);
+        print_output(outputfile, logfile, slog.str(), sout, F);
+        sout = outputfilename;
+        slog << sout;
+        F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
         int flag = 1;
+        exit(0);
         return;
     }
 }
@@ -511,13 +514,14 @@ int main(){
     slog << sout;
     F=2;
     print_output(outputfile, logfile, slog.str(),sout, F);
+    open_input(inputfilename,inputfile, slog, flag);
     sout = "\nProcessing input...\n";
     slog << sout;
     F=2;
     print_output(outputfile, logfile, slog.str(),sout, F);
     logfile.close();
-
-    open_input(inputfilename,inputfile, flag);
+    if (flag ==1)
+    return 0;
     inputfile >> EventID;
     inputfile >> date;
     date_check(date,slog);  
@@ -558,7 +562,7 @@ int main(){
     // If the header read successfully, then open the output file.
 
     if (flag == 0)
-        open_output("yuan.out",outputfile);
+        open_output("yuan.out",outputfile,slog);
     outputfile.close();
     sout = "Header read correctly!\n";
     slog << sout;
