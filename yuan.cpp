@@ -73,6 +73,7 @@ void open_input(string inputfilename,ifstream &inputfile,stringstream &slog, int
         flag = 1;
         exit(0);
     } 
+
     return;
 }
 
@@ -101,7 +102,7 @@ void date_check(string date, stringstream & slog){
     string sout;
     ofstream outputfile, logfile;
     if (date.size()!=10){
-        sout ="Invalid date.\n";
+        sout ="Invalid date.(Hint: Size should be 10 as 'MM/DD/YYYY or MM-DD-YYYY')\n";
         slog << sout;
         int F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
@@ -109,14 +110,14 @@ void date_check(string date, stringstream & slog){
     }
     if (!isdigit(date[0])||!isdigit(date[1])||!isdigit(date[3])||!isdigit(date[4])
         ||!isdigit(date[6])||!isdigit(date[7])||!isdigit(date[8])||!isdigit(date[9])){
-        sout ="Invalid date. (The date should be numbers.)\n";
+        sout ="Invalid date. (Hint: The date should be numbers.)\n";
         slog << sout;
         int F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
         exit(0);
     }   
     if((date[2] != '-' || date[5] != '-')&&(date[2] != '/' || date[5] != '/')){
-        sout ="Invalid fomat of date.\n";
+        sout ="Invalid fomat of date.(Hint: MM/DD/YYYY or MM-DD-YYYY)\n";
         slog << sout;
         int F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
@@ -157,7 +158,7 @@ void time_check(string time, stringstream & slog){
     string sout;
     ofstream outputfile, logfile;
     if (time.size()!=12){
-        sout = "Invalid format of time.\n";
+        sout = "Invalid format of time.(Hint: Size should be 12 as 'hh:mm:ss.fff')\n";
         slog << sout;
         int F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
@@ -167,14 +168,14 @@ void time_check(string time, stringstream & slog){
         ||!isdigit(time[3])||!isdigit(time[4])
         ||!isdigit(time[6])||!isdigit(time[7])
         ||!isdigit(time[9])||!isdigit(time[10])||!isdigit(time[11])){
-        sout = "Invalid time. (The time should be numbers.)\n";
+        sout = "Invalid time. (Hint: The time should be numbers.)\n";
         slog << sout;
         int F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
         exit(0);
     }   
     if(time[2] != ':' || time[5] != ':'||time[8] != '.' ){
-        sout = "Invalid fomat of time.\n";
+        sout = "Invalid fomat of time.(Hint: hh:mm:ss.fff)\n";
         slog << sout;
         int F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
@@ -188,14 +189,14 @@ void timezone_check(string timezone, stringstream &slog){
     string sout;
     ofstream outputfile, logfile;
     if (timezone.size()!=3){
-        sout = "Invalid format of timezone.\n";
+        sout = "Invalid format of timezone.(Hint: Size should be 3.)\n";
         slog << sout;
         int F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
         exit (0);
     }
     if (!isalpha(timezone[0])||!isalpha(timezone[1])||!isalpha(timezone[2])){
-        sout = "Invalid format of timezone. \n";
+        sout = "Invalid format of timezone. (Hint: The timezone should be 3 chars)\n";
         slog << sout;
         int F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
@@ -647,14 +648,13 @@ int main(){
     F=1;
     sout = '\0';
     ss << itos(size) <<"\n";
-    print_output(outputfile, logfile,ss.str(),sout,F); 
-    
+    print_output(outputfile, logfile,ss.str(),sout,F);     
     for (int j=0; j< size; j++){
-        F=1;
         ss << Signaldata[j].NT << "." << Signaldata[j].STN << "." 
            << Signaldata[j].B << Signaldata[j].I << Signaldata[j].O <<"\n"; 
-        print_output(outputfile, logfile,ss.str(),sout,F); 
     }
+    F=1;
+    print_output(outputfile, logfile,ss.str(),sout,F); 
     F=2;
     sout = "\nFinished!\n";
     slog << sout;
