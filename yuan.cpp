@@ -47,7 +47,6 @@ void open_log( string logfilename, ofstream &logfile){
         cout<< "Cannot open log file: "
             << logfilename
             << endl;
-        int flag = 1;
         return;
     }
 }
@@ -64,6 +63,10 @@ void open_input(string inputfilename,ifstream &inputfile,stringstream &slog, int
         int F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
         sout = inputfilename;
+        slog << sout;
+        F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
+        sout ="\n";
         slog << sout;
         F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
@@ -88,7 +91,6 @@ void open_output( string outputfilename, ofstream &outputfile, stringstream &slo
         slog << sout;
         F=2;
         print_output(outputfile, logfile, slog.str(), sout, F);
-        int flag = 1;
         exit(0);
         return;
     }
@@ -132,23 +134,23 @@ string print_out_month(string date){
     if ((date[0]==48) && (date[1]==51))
         return "March ";
     if ((date[0]==48) && (date[1]==52))
-        cout << "April ";
+        return "April ";
     if ((date[0]==48) && (date[1]==53))
-        cout << "May ";
+        return "May ";
     if ((date[0]==48) && (date[1]==54))
-        cout << "June ";
+        return "June ";
     if ((date[0]==48) && (date[1]==55))
-        cout << "July ";
+        return "July ";
     if ((date[0]==48) && (date[1]==56))
-        cout << "August ";
+        return "August ";
     if ((date[0]==48) && (date[1]==57))
-        cout << "September ";
+        return "September ";
     if ((date[0]==49) && (date[1]==48))
-        cout << "Ocotobor ";
+        return "Ocotobor ";
     if ((date[0]==49) && (date[1]==49))
-        cout << "November ";
+        return "November ";
     if ((date[0]==49) && (date[1]==50))
-        cout << "December ";
+        return "December ";
 }
 
 void time_check(string time, stringstream & slog){
@@ -219,6 +221,18 @@ string uppercase (string &s){
 bool is_valid_magnitude (string s) {
     string ss = uppercase(s);
     return((ss=="ML")||(ss=="MS")||(ss=="MB")||(ss=="MW"));
+}
+
+void magnitude_check(string magnitude, stringstream &slog){
+    string sout;
+    ofstream outputfile, logfile;
+    if(!is_valid_magnitude (magnitude)){
+        sout = "Invalid magnitude.\n";
+        slog << sout;
+        int F=2;
+        print_output(outputfile, logfile, slog.str(), sout, F);
+        exit (0);
+    }
 }
 
 string itos(int i) {
@@ -529,29 +543,18 @@ int main(){
     time_check(time,slog);
     inputfile >> timezone;
     timezone_check(timezone,slog);
-
     string name;
-    for ( int i=0; getline(inputfile,name); i++ ){   
-        if (i==1)
-        break;
-    }
+    getline(inputfile,name);
+    getline(inputfile,name);
     double longitude, latitude,depth;
     inputfile >> longitude >> latitude >> depth;
     string magnitude;
     inputfile >> magnitude;
-    if(!is_valid_magnitude (magnitude)){
-        sout = "Invalid magnitude.\n";
-        slog << sout;
-        F=2;
-        print_output(outputfile, logfile, slog.str(), sout, F);
-        flag = 1;
-        return 0;
-    }
-
+    magnitude_check(magnitude, slog);
     float magnitudevalue;
     inputfile >> magnitudevalue;
     if (magnitudevalue<0){
-        sout =  "invalid magnitudevalue.\n";
+        sout =  "invalid magnitude value.\n";
         slog << sout;
         F=2;
         print_output(outputfile, logfile, slog.str(),sout,F);
@@ -560,6 +563,7 @@ int main(){
     }
 
     // If the header read successfully, then open the output file.
+    // Print the header information into output file.
 
     if (flag == 0)
         open_output("yuan.out",outputfile,slog);
@@ -582,6 +586,7 @@ int main(){
 
     // Reading the table of earthquake information. 
     // The number of valid information will not more than 300.
+
     const int MAXSIZE = 300;
     Signal Signaldata[MAXSIZE];
     int size = 0, i=1,m=0, flag1=0,flag2=0,flag3=0,flag4=0,flag5=0;
@@ -617,6 +622,8 @@ int main(){
         i++;
     }
     int k=i;
+    
+    // Generat the report for total information read.
 
     F=2;
     sout ="\nTotal invalid entries igored: ";
@@ -644,7 +651,6 @@ int main(){
     
     for (int j=0; j< size; j++){
         F=1;
-       // sout = '\0';
         ss << Signaldata[j].NT << "." << Signaldata[j].STN << "." 
            << Signaldata[j].B << Signaldata[j].I << Signaldata[j].O <<"\n"; 
         print_output(outputfile, logfile,ss.str(),sout,F); 
